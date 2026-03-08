@@ -7,7 +7,7 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
 :root{
   --bg:#0b0f1c;--bg2:#0e1524;--bg3:#111d30;--bg4:#152238;
-  --border:#1c2c44;--text:#b8ccec;--dim:#3d5878;--hi:#ddeeff;
+  --border:#27405f;--text:#d7e8ff;--dim:#8fb0d6;--hi:#f4fbff;
   --failed:#ff4d4d;--leaf:#f5a623;--root:#2dd4aa;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -22,14 +22,15 @@ h1{font-size:13px;font-weight:600;color:var(--hi);}
 .hstat{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
 .hstat b{color:var(--hi);}
 
-.toolbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:7px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;}
-select,input[type=text]{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 8px;border-radius:3px;outline:none;}
-input[type=text]{color:var(--hi);width:220px;}
-input[type=text]:focus,select:focus{border-color:#4a9eff;}
-.tlbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);}
-.tsep{width:1px;height:18px;background:var(--border);margin:0 3px;}
+.toolbar{background:linear-gradient(180deg,#101c3e 0%,#0e1935 100%);border-bottom:1px solid #2d4d72;padding:7px 16px;display:flex;align-items:center;gap:8px;flex-shrink:0;box-shadow:inset 0 -1px 0 rgba(180,220,255,.12);}
+select,input[type=text]{background:#11203d;border:1px solid #3d6694;color:#eef7ff;font-family:'IBM Plex Mono',monospace;font-size:10px;padding:4px 8px;border-radius:3px;outline:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);}
+input[type=text]{color:#f4fbff;width:220px;}
+input[type=text]::placeholder{color:#9db7d8;}
+input[type=text]:focus,select:focus{border-color:#7fb7ff;box-shadow:0 0 0 1px rgba(127,183,255,.25);}
+.tlbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#b9d4f3;text-shadow:0 0 1px rgba(255,255,255,.18);}
+.tsep{width:1px;height:18px;background:#315277;margin:0 3px;}
 .legend{display:flex;gap:14px;margin-left:auto;align-items:center;}
-.li{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);}
+.li{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#c7ddfb;text-shadow:0 0 1px rgba(255,255,255,.15);font-weight:600;}
 .lb{width:26px;height:9px;border-radius:2px;}
 
 .main{flex:1;overflow:hidden;display:flex;}
@@ -90,10 +91,10 @@ input[type=text]:focus,select:focus{border-color:#4a9eff;}
   <div class="tsep"></div>
   <input type="text" id="search" placeholder="Search taskflow / task / mapping…" oninput="applyFilters()">
   <div class="legend">
-    <div class="li"><div class="lb" style="background:#4a9eff33;border:1px solid #4a9eff80"></div>Root TF</div>
-    <div class="li"><div class="lb" style="background:#f5a62333;border:1px solid #f5a62380"></div>Worklet</div>
-    <div class="li"><div class="lb" style="background:#a78bfa33;border:1px solid #a78bfa80"></div>MCT</div>
-    <div class="li"><div class="lb" style="background:#2dd4aa22;border:1px solid #2dd4aa80"></div>Mapping</div>
+    <div class="li"><div class="lb" style="background:#4a9eff4d;border:1px solid #7db8ff"></div>Root TF</div>
+    <div class="li"><div class="lb" style="background:#f5a62340;border:1px solid #ffc35c"></div>Worklet</div>
+    <div class="li"><div class="lb" style="background:#a78bfa40;border:1px solid #ccb8ff"></div>MCT</div>
+    <div class="li"><div class="lb" style="background:#2dd4aa33;border:1px solid #78f0d0"></div>Mapping</div>
   </div>
 </div>
 <div class="main" id="main">
@@ -424,9 +425,9 @@ function drawTaskRow(ctx,r){
   const mapW=COL_W;
   // MCT box — always purple
   drawBox(ctx,r.x,r.cy-9,COL_W,18,3,COLOR_MCT+'20',COLOR_MCT+'66');
-  ctx.fillStyle=COLOR_MCT+'ee';ctx.font=`10px 'IBM Plex Mono',monospace`;ctx.textAlign='left';
+  ctx.fillStyle='#d8b4fe';ctx.font=`10px 'IBM Plex Mono',monospace`;ctx.textAlign='left';
   ctx.fillText(clip(r.node.name,27),r.x+7,r.cy+4);
-  tagBox(ctx,'MCT',r.x+COL_W-36,r.cy-6,COLOR_MCT);
+  tagBox(ctx,'MCT',r.x+COL_W-36,r.cy-6,'#c084fc');
   // Mapping box — always teal
   const ml=r.node.mapping||r.node.name;
   drawBox(ctx,mapX,r.cy-9,mapW,18,3,COLOR_MAP+'18',COLOR_MAP+'55');
@@ -453,9 +454,9 @@ function drawTaskRow(ctx,r){
   // Tier badge
   if(r.node.tier==='root'||r.node.tier==='leaf'){
     const bc=r.node.tier==='root'?'#2dd4aa':'#f5a623';
-    drawBox(ctx,CANVAS_W-44,r.cy-6,36,12,2,bc+'18',bc+'33');
-    ctx.fillStyle=bc+'cc';ctx.font=`8px 'IBM Plex Mono',monospace`;ctx.textAlign='center';
-    ctx.fillText(r.node.tier,CANVAS_W-26,r.cy+4);ctx.textAlign='left';
+    drawBox(ctx,CANVAS_W-38,r.cy-6,36,12,2,bc+'18',bc+'44');
+    ctx.fillStyle=bc+'ee';ctx.font=`8px 'IBM Plex Mono',monospace`;ctx.textAlign='center';
+    ctx.fillText(r.node.tier,CANVAS_W-20,r.cy+4);ctx.textAlign='left';
   }
 }
 
