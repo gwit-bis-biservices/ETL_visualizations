@@ -797,15 +797,21 @@ function linCompute(){
   const dU=linBfs('up'), dD=linBfs('down'), col=new Map([[LIN.focus,0]]);
   dU.forEach((d,id)=>{if(d&&d<=LIN.up) col.set(id,-d);});
   dD.forEach((d,id)=>{if(d&&d<=LIN.down&&!col.has(id)) col.set(id,d);});
-  // Nodes opened by hand keep their true distance when they have one; otherwise they sit next to the node they came from
+  // Hand-opened nodes reveal neighbors — but only those also reachable from
+  // focus in the SAME direction. Column = BFS distance from focus. Prevents
+  // downstream readers from leaking into the upstream column (and vice versa).
   let grew=true;
   while(grew){
     grew=false;
-    [['up',LIN.xUp,-1],['down',LIN.xDown,1]].forEach(([dir,set,step])=>set.forEach(id=>{
+    [['up',LIN.xUp,dU],['down',LIN.xDown,dD]].forEach(([dir,set,distMap])=>set.forEach(id=>{
       if(!col.has(id)) return;
       linNb(id,dir).forEach(e=>{
         const o=dir==='up'?e.s:e.t;
-        if(!col.has(o)){col.set(o,dU.has(o)?-dU.get(o):dD.has(o)?dD.get(o):col.get(id)+step);grew=true;}
+        if(col.has(o)) return;
+        const d=distMap.get(o);
+        if(!d) return;                               // not reachable from focus in this direction → skip
+        col.set(o, dir==='up' ? -d : d);              // always use BFS distance from focus
+        grew=true;
       });
     }));
   }
